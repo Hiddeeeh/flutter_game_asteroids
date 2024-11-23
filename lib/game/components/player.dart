@@ -2,7 +2,21 @@ import 'package:flame/components.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_game/game/space_shooter_game.dart';
 
-class Player extends SpriteComponent with KeyboardHandler, HasGameReference<SpaceShooterGame> {
+class Player extends SpriteComponent with KeyboardHandler, HasGameRef<SpaceShooterGame> {
+
+  Player() : super(
+    size: Vector2(100, 100),
+    anchor: Anchor.center,
+  );
+
+  @override
+  Future<void> onLoad() async {
+    await super.onLoad();
+
+    sprite = await gameRef.loadSprite('player.png');
+
+    position = gameRef.size / 2;
+  }
   
   final Vector2 velocity = Vector2.zero();
   double speed = 200;
@@ -14,6 +28,8 @@ class Player extends SpriteComponent with KeyboardHandler, HasGameReference<Spac
   @override
   bool onKeyEvent(KeyEvent event, Set<LogicalKeyboardKey> keysPressed) {
     if (event is KeyDownEvent) {
+      horizontalDirection = 0;
+      verticalDirection = 0;
       if (keysPressed.contains(LogicalKeyboardKey.arrowLeft) || keysPressed.contains(LogicalKeyboardKey.keyA)) {
         if (horizontalDirection >= 0) {
          horizontalDirection -= 1;
