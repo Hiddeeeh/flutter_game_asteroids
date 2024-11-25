@@ -1,4 +1,5 @@
 import 'package:flame/components.dart';
+import 'package:flame/input.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_game/game/space_shooter_game.dart';
 
@@ -6,10 +7,11 @@ import 'bullet.dart';
 
 class Player extends SpriteComponent
     with KeyboardHandler, HasGameRef<SpaceShooterGame> {
+  final Function onPlayerHit;
   final double speed = 200;
   Vector2 velocity = Vector2.zero();
 
-  Player() : super(size: Vector2.all(50.0));
+  Player({required this.onPlayerHit}) : super(size: Vector2.all(50.0));
 
   @override
   Future<void> onLoad() async {
@@ -31,20 +33,16 @@ class Player extends SpriteComponent
   @override
   bool onKeyEvent(KeyEvent event, Set<LogicalKeyboardKey> keysPressed) {
     velocity = Vector2.zero();
-
     if (keysPressed.contains(LogicalKeyboardKey.arrowLeft) ||
         keysPressed.contains(LogicalKeyboardKey.keyA)) {
       velocity.x = -speed;
-    }
-    if (keysPressed.contains(LogicalKeyboardKey.arrowRight) ||
+    } if (keysPressed.contains(LogicalKeyboardKey.arrowRight) ||
         keysPressed.contains(LogicalKeyboardKey.keyD)) {
       velocity.x = speed;
-    }
-    if (keysPressed.contains(LogicalKeyboardKey.arrowUp) ||
+    } if (keysPressed.contains(LogicalKeyboardKey.arrowUp) ||
         keysPressed.contains(LogicalKeyboardKey.keyW)) {
       velocity.y = -speed;
-    }
-    if (keysPressed.contains(LogicalKeyboardKey.arrowDown) ||
+    } if (keysPressed.contains(LogicalKeyboardKey.arrowDown) ||
         keysPressed.contains(LogicalKeyboardKey.keyS)) {
       velocity.y = speed;
     }
