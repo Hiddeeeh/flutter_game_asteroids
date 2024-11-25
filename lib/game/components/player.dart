@@ -4,72 +4,60 @@ import 'package:flutter_game/game/space_shooter_game.dart';
 
 import 'bullet.dart';
 
-class Player extends SpriteComponent with KeyboardHandler, HasGameRef<SpaceShooterGame> {
+class Player extends SpriteComponent
+    with KeyboardHandler, HasGameRef<SpaceShooterGame> {
+  final double speed = 200;
+  Vector2 velocity = Vector2.zero();
 
-  Player() : super(
-    size: Vector2(100, 100),
-    anchor: Anchor.center,
-  );
+  Player() : super(size: Vector2.all(50.0));
 
   @override
   Future<void> onLoad() async {
-    await super.onLoad();
-
     sprite = await gameRef.loadSprite('player.png');
 
     position = gameRef.size / 2;
-  }
-  
-  final Vector2 velocity = Vector2.zero();
-  double speed = 200;
-  int horizontalDirection = 0;
-  int verticalDirection = 0;
-
-
-  //keyboard input
-  @override
-  bool onKeyEvent(KeyEvent event, Set<LogicalKeyboardKey> keysPressed) {
-    if (event is KeyDownEvent) {
-      horizontalDirection = 0;
-      verticalDirection = 0;
-      if (keysPressed.contains(LogicalKeyboardKey.arrowLeft) || keysPressed.contains(LogicalKeyboardKey.keyA)) {
-        if (horizontalDirection >= 0) {
-         horizontalDirection -= 1;
-        }
-      }
-      if (keysPressed.contains(LogicalKeyboardKey.arrowRight) || keysPressed.contains(LogicalKeyboardKey.keyD)) {
-        if (horizontalDirection <= 0) {
-         horizontalDirection += 1;
-        }
-      }
-      if (keysPressed.contains(LogicalKeyboardKey.arrowUp) || keysPressed.contains(LogicalKeyboardKey.keyW)) {
-        if (verticalDirection >= 0) {
-         verticalDirection -= 1;
-        }
-      } 
-      if (keysPressed.contains(LogicalKeyboardKey.arrowDown) || keysPressed.contains(LogicalKeyboardKey.keyS)) {
-        if (verticalDirection <= 0) {
-         verticalDirection += 1;
-        }
-      }
-
-      if (keysPressed.contains(LogicalKeyboardKey.space)) {
-        fireBullet();
-      }
-    }
-    return true;
   }
 
   @override
   void update(double dt) {
     super.update(dt);
-    velocity.x = horizontalDirection * speed;
-    velocity.y = verticalDirection * speed;
     position += velocity * dt;
+
+    //make shure the player wont go off screen
+    position.clamp(Vector2.zero(), gameRef.size - size);
   }
-  
+
+  //keyboard input
+  @override
+  bool onKeyEvent(KeyEvent event, Set<LogicalKeyboardKey> keysPressed) {
+    velocity = Vector2.zero();
+
+    if (keysPressed.contains(LogicalKeyboardKey.arrowLeft) ||
+        keysPressed.contains(LogicalKeyboardKey.keyA)) {
+      velocity.x = -speed;
+    }
+    if (keysPressed.contains(LogicalKeyboardKey.arrowRight) ||
+        keysPressed.contains(LogicalKeyboardKey.keyD)) {
+      velocity.x = speed;
+    }
+    if (keysPressed.contains(LogicalKeyboardKey.arrowUp) ||
+        keysPressed.contains(LogicalKeyboardKey.keyW)) {
+      velocity.y = -speed;
+    }
+    if (keysPressed.contains(LogicalKeyboardKey.arrowDown) ||
+        keysPressed.contains(LogicalKeyboardKey.keyS)) {
+      velocity.y = speed;
+    }
+
+    if (keysPressed.contains(LogicalKeyboardKey.space)) {
+      fireBullet();
+    }
+
+    return true;
+  }
+
   void fireBullet() {
-    final bullet = Bullet(position + Vector2(25,0));
+    final bullet = Bullet(position + Vector2(25, 0));
     gameRef.add(bullet);
   }
 }
