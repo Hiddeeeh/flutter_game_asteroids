@@ -2,6 +2,8 @@ import 'package:flame/components.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_game/game/space_shooter_game.dart';
 
+import 'bullet.dart';
+
 class Player extends SpriteComponent with KeyboardHandler, HasGameRef<SpaceShooterGame> {
 
   Player() : super(
@@ -50,6 +52,10 @@ class Player extends SpriteComponent with KeyboardHandler, HasGameRef<SpaceShoot
          verticalDirection += 1;
         }
       }
+
+      if (keysPressed.contains(LogicalKeyboardKey.space)) {
+        fireBullet();
+      }
     }
     return true;
   }
@@ -60,5 +66,10 @@ class Player extends SpriteComponent with KeyboardHandler, HasGameRef<SpaceShoot
     velocity.x = horizontalDirection * speed;
     velocity.y = verticalDirection * speed;
     position += velocity * dt;
+  }
+  
+  void fireBullet() {
+    final bullet = Bullet(position + Vector2(25,0));
+    gameRef.add(bullet);
   }
 }
