@@ -19,27 +19,34 @@ class GameWon extends GameEvent {}
 class GameOver extends GameEvent {}
 
 class GameBloc extends Bloc<GameEvent, GameState> {
-  GameBloc() : super(GameState.initial());
+  GameBloc() : super(GameState.initial()){
+  
+  on<InCreaseScore>((event, emit) {
+    final newScore = state.score + event.points;
+    emit(state.copyWith(score: newScore));
+  });
 
-  @override
-  // ignore: override_on_non_overriding_member
-  Stream<GameState> mapEventToState(GameEvent event) async*{
-    if (event is InCreaseScore) {
-      yield state.copyWith(score: state.score + event.points);
-    } else if (event is DecreaseLives) {
-      final newLives = state.lives - 1;
-      if (newLives <= 0) {
-        yield state.copyWith(lives: 0, status: GameStatus.gameOver);
-      } else {
-        yield state.copyWith(lives: newLives);
-      }
-    } else if (event is ResetGame) {
-      yield GameState.initial();
-    } else if (event is GameWon) {
-      yield state.copyWith(status: GameStatus.gameWon);
-    } else if (event is GameOver) {
-      yield state.copyWith(status: GameStatus.gameOver);
+  on<DecreaseLives>((event, emit) {
+    final newLives = state.lives - 1;
+    if (newLives <= 0) {
+      emit(state.copyWith(lives: 0, status: GameStatus.gameOver));
+    } else {
+      emit(state.copyWith(lives: newLives));
     }
-  }
+  });
+
+  on<ResetGame>((event, emit) {
+    emit(GameState.initial());
+  });
+
+  on<GameWon>((event, emit) {
+    emit(state.copyWith(status: GameStatus.gameWon));
+  });
+
+  on<GameOver>((event, emit) {
+    emit(state.copyWith(status: GameStatus.gameOver));
+  });
+
 }
 
+}
