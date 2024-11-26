@@ -1,19 +1,19 @@
 
 
 import 'package:flame/components.dart';
+import 'package:flutter_game/game/behaviors/behavior.dart';
 import 'package:flutter_game/game/space_shooter_game.dart';
 
 class Enemy extends SpriteComponent with HasGameRef<SpaceShooterGame>{
 
+  final Behavior behavior;
   double speed = 100;
   late Vector2 direction;
 
-  Enemy( Vector2 initialPosition) : super(size: Vector2.all(30.0)) {
-    position = initialPosition;
-    
-    //for now move in random direction
-    direction = (Vector2.random() - Vector2(0.5, 0.5)).normalized();
-  }
+  Enemy({
+    required Vector2 position,
+    required this.behavior
+    }) : super(position: position, size: Vector2.all(30.0));
 
   @override
   Future<void> onLoad() async {
@@ -25,12 +25,8 @@ class Enemy extends SpriteComponent with HasGameRef<SpaceShooterGame>{
   void update (double dt) {
     super.update(dt);
     
-    position += direction * speed * dt;
+    behavior.update(dt, this);
 
-    if (position.x > gameRef.size.x) position.x = 0;
-    if (position.x < 0) position.x = gameRef.size.x;
-    if (position.y > gameRef.size.y) position.y = 0;
-    if (position.y < 0) position.y = gameRef.size.y; 
   }
 
 }

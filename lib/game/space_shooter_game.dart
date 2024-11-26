@@ -7,6 +7,8 @@ import 'dart:math';
 
 import 'package:flame/events.dart';
 import 'package:flame/game.dart';
+import 'package:flutter_game/game/behaviors/chase_player_behavior.dart';
+import 'package:flutter_game/game/behaviors/random_movement_behavior.dart';
 // import 'package:flame/parallax.dart';
 // import 'package:flutter/material.dart';
 
@@ -49,14 +51,14 @@ class SpaceShooterGame extends FlameGame with HasKeyboardHandlerComponents{
     add(player);
 
     //spawn some enemys for now
-    spawnEnemys(2);
+    spawnEnemies(5);
 
     // enemyManager = EnemyManager();
     // add(enemyManager);
 
   }
 
-  void spawnEnemys(int count) {
+  void spawnEnemies(int count) {
     final random = Random();
     for (var i = 0; i < count; i++) {
       //randommize position
@@ -64,11 +66,16 @@ class SpaceShooterGame extends FlameGame with HasKeyboardHandlerComponents{
         random.nextDouble() * size.x,
         random.nextDouble() * size.y,
       );
-      add(Enemy(
-        position,
-        // onEnemyDestroyed: handleEnemyDestroyed,
-      ));
-    }
+
+      final Behavior = random.nextBool()
+          ? RandomMovementBehavior(speed: 100)
+          : ChasePlayerBehavior(player, speed: 150);
+
+      final enemy = Enemy(position: position, behavior: Behavior);
+
+      add(enemy);
+    
+  } 
   }
 
   @override
