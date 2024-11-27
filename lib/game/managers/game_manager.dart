@@ -19,8 +19,9 @@ class GameManager {
     for (var bullet in bullets) {
       for (var enemy in enemies) {
         if (bullet.toRect().overlaps(enemy.toRect())) {
+          enemy.onHit();
           bullet.removeFromParent();
-          enemy.removeFromParent();
+          
 
           gameBloc.add(InCreaseScore(10));
         }

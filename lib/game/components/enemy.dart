@@ -1,6 +1,8 @@
 
 
 import 'package:flame/components.dart';
+import 'package:flame/effects.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_game/game/behaviors/behavior.dart';
 import 'package:flutter_game/game/space_shooter_game.dart';
 
@@ -10,6 +12,7 @@ class Enemy extends SpriteComponent with HasGameRef<SpaceShooterGame>{
   Behavior behavior;
   double speed = 100;
   late Vector2 direction;
+  bool isHit = false;
 
   Enemy({
     required Vector2 position,
@@ -18,8 +21,12 @@ class Enemy extends SpriteComponent with HasGameRef<SpaceShooterGame>{
 
   @override
   Future<void> onLoad() async {
-
     sprite = await gameRef.loadSprite('enemy_spaceship.png');
+
+    //little scale effect when the enemy spawns
+    add(ScaleEffect.to(
+      Vector2.all(1.2),
+      EffectController(duration: 0.5, reverseDuration: 0.5, repeatCount: 1)));
   }
 
   @override
@@ -42,6 +49,27 @@ class Enemy extends SpriteComponent with HasGameRef<SpaceShooterGame>{
     position = startPosition;
     behavior = newBehavior;
     active = true;
+  }
+
+
+  void onHit() {
+    active = false;
+
+    add(
+      ColorEffect(
+        Colors.red,
+        EffectController(duration: 0.3),
+        )
+    );
+
+    add(
+      ScaleEffect.to(
+        Vector2.zero(),
+        EffectController(duration: 0.5),
+        onComplete: () {
+          removeFromParent();
+        })
+    );
   }
 
 }
