@@ -39,6 +39,8 @@ class SpaceShooterGame extends FlameGame with HasKeyboardHandlerComponents{
       'explosion.mp3',
     ]);
 
+    FlameAudio.bgm.stop();
+
     FlameAudio.bgm.play('background_music.mp3', volume: 0.5);
 
     // final parallax = await loadParallaxComponent(
@@ -99,7 +101,6 @@ class SpaceShooterGame extends FlameGame with HasKeyboardHandlerComponents{
   }
 
   void resetGame() {
-    FlameAudio.bgm.stop();
     gameBloc.add(ResetGame());
   }
 }
