@@ -31,3 +31,6 @@ flutter:
     - assets/images/background_layer4.png
     - assets/images/bullet.png
     - assets/images/enemy_spaceship.png
+    - assets/audio/background_music.mp3
+    - assets/audio/explosion.mp3
+    - assets/audio/laser.mp3

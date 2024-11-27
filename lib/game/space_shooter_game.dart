@@ -7,6 +7,7 @@ import 'dart:math';
 
 import 'package:flame/events.dart';
 import 'package:flame/game.dart';
+import 'package:flame_audio/flame_audio.dart';
 import 'package:flutter_game/game/behaviors/chase_player_behavior.dart';
 import 'package:flutter_game/game/behaviors/random_movement_behavior.dart';
 import 'package:flutter_game/game/managers/enemy_pool.dart';
@@ -31,6 +32,14 @@ class SpaceShooterGame extends FlameGame with HasKeyboardHandlerComponents{
   @override
   Future<void> onLoad() async {
     super.onLoad();
+
+    await FlameAudio.audioCache.loadAll([
+      'background_music.mp3',
+      'laser.mp3',
+      'explosion.mp3',
+    ]);
+
+    FlameAudio.bgm.play('background_music.mp3', volume: 0.5);
 
     // final parallax = await loadParallaxComponent(
     //   [
@@ -90,6 +99,7 @@ class SpaceShooterGame extends FlameGame with HasKeyboardHandlerComponents{
   }
 
   void resetGame() {
+    FlameAudio.bgm.stop();
     gameBloc.add(ResetGame());
   }
 }

@@ -2,6 +2,7 @@
 
 import 'package:flame/components.dart';
 import 'package:flame/effects.dart';
+import 'package:flame_audio/flame_audio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_game/game/behaviors/behavior.dart';
 import 'package:flutter_game/game/space_shooter_game.dart';
@@ -54,6 +55,7 @@ class Enemy extends SpriteComponent with HasGameRef<SpaceShooterGame>{
 
   void onHit() {
     active = false;
+    FlameAudio.play('explosion.mp3');
 
     add(
       ColorEffect(
