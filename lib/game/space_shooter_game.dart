@@ -9,18 +9,21 @@ import 'package:flame/events.dart';
 import 'package:flame/game.dart';
 import 'package:flutter_game/game/behaviors/chase_player_behavior.dart';
 import 'package:flutter_game/game/behaviors/random_movement_behavior.dart';
+import 'package:flutter_game/game/managers/enemy_pool.dart';
 // import 'package:flame/parallax.dart';
 // import 'package:flutter/material.dart';
 
 import 'blocs/game_bloc.dart';
-import 'components/enemy.dart';
 import 'components/player.dart';
+import 'managers/bullet_pool.dart';
 import 'managers/game_manager.dart';
 
 class SpaceShooterGame extends FlameGame with HasKeyboardHandlerComponents{
   final GameBloc gameBloc;
   late Player player;
   late GameManager gameManager;
+  late BulletPool bulletPool;
+  late EnemyPool enemyPool;
   // late EnemyManager enemyManager;
 
   SpaceShooterGame({required this.gameBloc});
@@ -44,10 +47,12 @@ class SpaceShooterGame extends FlameGame with HasKeyboardHandlerComponents{
     // add(parallax);
 
     gameManager = GameManager(gameBloc: gameBloc, game: this);
+    bulletPool = BulletPool();
+    enemyPool = EnemyPool();
 
     player = Player(onPlayerHit: () {
       gameBloc.add(DecreaseLives());
-    });
+    }, bulletPool: bulletPool);
     add(player);
 
     //spawn some enemys for now
@@ -67,11 +72,11 @@ class SpaceShooterGame extends FlameGame with HasKeyboardHandlerComponents{
         random.nextDouble() * size.y,
       );
 
-      final Behavior = random.nextBool()
+      final behavior = random.nextBool()
           ? RandomMovementBehavior(speed: 100)
           : ChasePlayerBehavior(player, speed: 150);
 
-      final enemy = Enemy(position: position, behavior: Behavior);
+      final enemy = enemyPool.getEnemy(position, behavior);
 
       add(enemy);
     

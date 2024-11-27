@@ -1,17 +1,19 @@
 import 'package:flame/components.dart';
-import 'package:flame/input.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_game/game/managers/bullet_pool.dart';
 import 'package:flutter_game/game/space_shooter_game.dart';
 
 import 'bullet.dart';
 
 class Player extends SpriteComponent
     with KeyboardHandler, HasGameRef<SpaceShooterGame> {
+  
   final Function onPlayerHit;
   final double speed = 200;
   Vector2 velocity = Vector2.zero();
+  final BulletPool bulletPool;
 
-  Player({required this.onPlayerHit}) : super(size: Vector2.all(50.0));
+  Player({required this.onPlayerHit, required this.bulletPool}) : super(size: Vector2.all(50.0));
 
   @override
   Future<void> onLoad() async {
@@ -55,7 +57,14 @@ class Player extends SpriteComponent
   }
 
   void fireBullet() {
-    final bullet = Bullet(position + Vector2(25, 0));
-    gameRef.add(bullet);
+    final bullet = bulletPool.getBullet(
+      position + Vector2(size.x / 2 - 5, -10),
+      Vector2(0, -1)
+    );
+    if (bullet != null) {
+      bullet.reset(position + Vector2(size.x / 2 - bullet.size.x / 2, -10), Vector2(0, -1));
+      gameRef.add(bullet);
+    }
+
   }
 }

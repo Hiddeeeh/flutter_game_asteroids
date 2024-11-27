@@ -6,12 +6,11 @@ import '../space_shooter_game.dart';
 
 class Bullet extends SpriteComponent with HasGameRef<SpaceShooterGame>{
 
+  bool active = false;
   final double speed = 400.0;
-  late Vector2 direction;
+  Vector2 direction = Vector2.zero();
 
-  Bullet(Vector2 initialPosition): super(position: initialPosition, size: Vector2.all(10.0)) {
-      direction = Vector2(0, -1);
-    }
+  Bullet(Vector2 position): super(position: position, size: Vector2.all(10.0));
 
   @override
   Future<void> onLoad() async{
@@ -23,13 +22,21 @@ class Bullet extends SpriteComponent with HasGameRef<SpaceShooterGame>{
   void update(double dt) {
     super.update(dt);
 
+    if (!active) return;
+
     //moving the bullet
     position += direction * speed * dt;
 
     //removing the bullet when off screen
     if (position.y < 0 || position.y > gameRef.size.y || position.x < 0 || position.x > gameRef.size.x) {
-      removeFromParent();
+      active = false;
     }
 
+  }
+
+  void reset(Vector2 startPosition, Vector2 directionVector) {
+    position = startPosition;
+    direction = directionVector;
+    active = true;
   }
 }
