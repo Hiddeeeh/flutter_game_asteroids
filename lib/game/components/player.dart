@@ -80,4 +80,9 @@ class Player extends SpriteComponent
       }
     }
   }
+
+  void reset() {
+    position = gameRef.size / 2;
+    velocity = Vector2.zero();
+  }
 }

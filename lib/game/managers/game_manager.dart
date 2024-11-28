@@ -1,10 +1,10 @@
-
-
 import 'package:flame/game.dart';
+import 'package:flutter_game/game/blocs/game_state.dart';
 
 import '../blocs/game_bloc.dart';
 import '../components/bullet.dart';
 import '../components/enemy.dart';
+import '../components/player.dart';
 
 class GameManager {
   final GameBloc gameBloc;
@@ -15,19 +15,40 @@ class GameManager {
   void checkCollisions() {
     final enemies = game.children.whereType<Enemy>().toList();
     final bullets = game.children.whereType<Bullet>().toList();
+    final player = game.children.whereType<Player>().isEmpty
+        ? null
+        : game.children.whereType<Player>().first;
 
-    for (var bullet in bullets) {
-      for (var enemy in enemies) {
+    for (var enemy in enemies) {
+      for (var bullet in bullets) {
         if (bullet.toRect().overlaps(enemy.toRect())) {
           enemy.onHit();
           bullet.removeFromParent();
-          
 
           gameBloc.add(InCreaseScore(10));
         }
       }
+      if (player != null && enemy.toRect().overlaps(player.toRect())) {
+        enemy.removeFromParent();
+        gameBloc.add(DecreaseLives());
+      }
     }
   }
 
+  void resetGame() {
+    gameBloc.add(ResetGame());
 
+    final bullets = game.children.whereType<Bullet>().toList();
+    final enemies = game.children.whereType<Enemy>().toList();
+    bullets.forEach((bullet) => bullet.removeFromParent);
+    enemies.forEach((enemy) => enemy.removeFromParent);
+
+    final player = game.children.whereType<Player>().isEmpty
+        ? null
+        : game.children.whereType<Player>().first;
+    player?.reset();
+
+    game.overlays.remove('GameOverMenu');
+    game.overlays.add('HUD');
+  }
 }
