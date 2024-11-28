@@ -7,6 +7,7 @@ import 'package:flutter_game/game/space_shooter_game.dart';
 
 import 'game/blocs/game_bloc.dart';
 import 'game/overlays/game_over_menu.dart';
+import 'game/overlays/game_won_menu.dart';
 import 'game/ui/hud.dart';
 
 class GamePage extends StatelessWidget {
@@ -26,9 +27,9 @@ class GamePage extends StatelessWidget {
               'GameOverMenu': (context, SpaceShooterGame gameRef) {
                 return GameOverMenu(onRestart: gameRef.resetGame);
               },
-              // 'GameWonMenu': (context, SpaceShooterGame gameRef) {
-              //   return GameWonMenu(onRestart: gameRef.resetGame);
-              // },
+              'GameWonMenu': (context, SpaceShooterGame gameRef) {
+                return GameWonMenu(onRestart: gameRef.resetGame);
+              },
               'HUD': (context, SpaceShooterGame gameRef) {
                 return HUD();
               },

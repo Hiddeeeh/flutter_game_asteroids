@@ -99,14 +99,20 @@ class SpaceShooterGame extends FlameGame with HasKeyboardHandlerComponents {
   void update(double dt) {
     super.update(dt);
     gameManager.checkCollisions();
-    
+
     final state = gameBloc.state;
     if (state.status == GameStatus.gameOver &&
         !overlays.isActive('GameOverMenu')) {
       overlays.add('GameOverMenu');
+    } else if (state.status == GameStatus.gameWon &&
+        !overlays.isActive('GameWonMenu')) {
+      overlays.add('GameWonMenu');
     } else if (state.status == GameStatus.playing &&
         overlays.isActive('GameOverMenu')) {
       overlays.remove('GameOverMenu');
+    } else if (state.status == GameStatus.playing &&
+        overlays.isActive('GameWonMenu')) {
+      overlays.remove('GameWonMenu');
     }
   }
 

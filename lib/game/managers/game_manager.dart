@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flame/game.dart';
 import 'package:flutter_game/game/blocs/game_state.dart';
 
@@ -29,7 +31,8 @@ class GameManager {
         }
       }
       if (player != null && enemy.toRect().overlaps(player.toRect())) {
-        enemy.removeFromParent();
+        enemy.position = Vector2.random();
+
         gameBloc.add(DecreaseLives());
       }
     }
@@ -40,14 +43,19 @@ class GameManager {
 
     final bullets = game.children.whereType<Bullet>().toList();
     final enemies = game.children.whereType<Enemy>().toList();
-    bullets.forEach((bullet) => bullet.removeFromParent);
-    enemies.forEach((enemy) => enemy.removeFromParent);
+    for (var bullet in bullets) {
+      bullet.removeFromParent();
+    }
+    for (var enemy in enemies) {
+      enemy.removeFromParent();
+    }
 
     final player = game.children.whereType<Player>().isEmpty
         ? null
         : game.children.whereType<Player>().first;
     player?.reset();
 
+    game.overlays.remove('GameWonMenu');
     game.overlays.remove('GameOverMenu');
     game.overlays.add('HUD');
   }
