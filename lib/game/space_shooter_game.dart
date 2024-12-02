@@ -101,6 +101,9 @@ class SpaceShooterGame extends FlameGame with HasKeyboardHandlerComponents {
     gameManager.checkCollisions();
 
     final state = gameBloc.state;
+    if (state.lives == 0 && player.isMounted) {
+      player.onDeath();
+    }
     if (state.status == GameStatus.gameOver &&
         !overlays.isActive('GameOverMenu')) {
       overlays.add('GameOverMenu');
@@ -118,6 +121,7 @@ class SpaceShooterGame extends FlameGame with HasKeyboardHandlerComponents {
 
   void resetGame() {
     gameManager.resetGame();
+    add(player);
     spawnEnemies(5);
   }
 }

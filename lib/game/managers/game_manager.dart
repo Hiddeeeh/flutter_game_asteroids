@@ -58,5 +58,6 @@ class GameManager {
     game.overlays.remove('GameWonMenu');
     game.overlays.remove('GameOverMenu');
     game.overlays.add('HUD');
+  
   }
 }

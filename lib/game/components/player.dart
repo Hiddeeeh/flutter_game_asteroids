@@ -1,6 +1,7 @@
 import 'package:flame/components.dart';
 import 'package:flame_audio/flame_audio.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_game/game/components/explosion.dart';
 import 'package:flutter_game/game/managers/bullet_pool.dart';
 import 'package:flutter_game/game/space_shooter_game.dart';
 
@@ -79,6 +80,14 @@ class Player extends SpriteComponent
         timeSinceLastShot = 0.0;
       }
     }
+  }
+
+  void onDeath() {
+    final explosion = Explosion(position: position.clone());
+    gameRef.add(explosion);
+
+    FlameAudio.play('explosion.mp3', volume: 0.1);
+    removeFromParent();
   }
 
   void reset() {
