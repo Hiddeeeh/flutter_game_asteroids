@@ -12,8 +12,7 @@ import 'package:flutter_game/game/behaviors/chase_player_behavior.dart';
 import 'package:flutter_game/game/behaviors/random_movement_behavior.dart';
 import 'package:flutter_game/game/components/start_music_on_interraction_component.dart';
 import 'package:flutter_game/game/managers/enemy_pool.dart';
-// import 'package:flame/parallax.dart';
-// import 'package:flutter/material.dart';
+
 
 import 'blocs/game_bloc.dart';
 import 'blocs/game_state.dart';
@@ -27,7 +26,7 @@ class SpaceShooterGame extends FlameGame with HasKeyboardHandlerComponents {
   late GameManager gameManager;
   late BulletPool bulletPool;
   late EnemyPool enemyPool;
-  // late EnemyManager enemyManager;
+
 
   SpaceShooterGame({required this.gameBloc});
 
